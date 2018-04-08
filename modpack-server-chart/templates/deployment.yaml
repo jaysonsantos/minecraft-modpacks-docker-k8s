@@ -1,0 +1,42 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: mc-modpack-{{ .Values.packName }}
+  labels:
+    app: mc-modpack-{{ .Values.packName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mc-modpack-{{ .Values.packName }}
+  template:
+    metadata:
+      labels:
+        app: mc-modpack-{{ .Values.packName }}
+    spec:
+      volumes:
+        # This is where your world will be stored. You might want to change the volume type depending on the persistence providers you have available
+        - name: persistence
+          hostPath:
+            path: {{ .Values.hostPersistencePath }}
+            type: Directory
+      containers:
+        - name: mc-modpack-{{ .Values.packName }}
+          image: "monofraps/minecraft-modpack:{{ .Values.packName}}-{{ .Values.packVersion }}"
+          imagePullPolicy: Always
+          env:
+            - name: JVM_MIN_HEAP
+              value: {{ .Values.jvmMinHeap }}
+            - name: JVM_MAX_HEAP
+              values: {{ .Vakues.jvmMaxHeap }}
+          ports:
+            - name: transport
+              containerPort: 25565
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/minecraft
+              name: persistence
+          readinessProbe:
+            tcpSocket:
+              port: transport
+

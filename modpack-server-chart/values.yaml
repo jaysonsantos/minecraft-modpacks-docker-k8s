@@ -1,0 +1,5 @@
+packName: modern-skyblock-3-departed
+packVersion: 3.2.0.1
+jvmMinHeap: 12g
+jvmMaxHeap: 12g
+hostPersistencePath: /var/lib/minecraft/skyblock-3
