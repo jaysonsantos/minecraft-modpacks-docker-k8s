@@ -1,10 +1,11 @@
 apiVersion: apps/v1beta2
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: mc-modpack-{{ .Values.packName }}
   labels:
     app: mc-modpack-{{ .Values.packName }}
 spec:
+  serviceName: mc-modpack-{{ .Values.packName }}
   replicas: 1
   selector:
     matchLabels:
@@ -28,7 +29,7 @@ spec:
             - name: JVM_MIN_HEAP
               value: {{ .Values.jvmMinHeap }}
             - name: JVM_MAX_HEAP
-              values: {{ .Vakues.jvmMaxHeap }}
+              value: {{ .Values.jvmMaxHeap }}
           ports:
             - name: transport
               containerPort: 25565
